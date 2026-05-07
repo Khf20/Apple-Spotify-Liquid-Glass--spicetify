@@ -15,6 +15,7 @@ A dark liquid-glass Spicetify theme inspired by modern Apple/iOS glass surfaces.
 - Full-width main content spacing.
 - Conservative CSS selectors to reduce breakage across Spotify updates.
 - Compatible with Spicetify custom apps such as Marketplace and betterLibrary.
+- Companion extension with settings, dynamic album accent, custom Home hero, preset switching, and debug tools.
 
 ## Installation
 
@@ -69,6 +70,20 @@ Edit `user.css` and run:
 ```
 
 The script copies the current files into your Spicetify theme folder and applies the theme.
+
+## Companion Extension
+
+The installer also enables `appleSpotifyLiquidGlassCompanion.js`. Open **Liquid Glass Settings** from the Spotify profile/menu area. If the menu item is unavailable, a small `LG` floating button appears near the player.
+
+The companion extension adds:
+
+- Theme settings panel.
+- Glass mode switcher: `glass`, `clear`, `solid`.
+- Blur switcher: `low`, `normal`, `high`.
+- Compact mode toggle.
+- Dynamic accent color from the current album art.
+- Custom Home hero based on the current track.
+- Debug helper for hard black surfaces.
 
 ## Marketplace Manifest
 

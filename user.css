@@ -657,6 +657,15 @@ html.aslg-ready [data-aslg-hard-black] {
   border-color: var(--aslg-border-soft) !important;
 }
 
+html.aslg-debug [data-aslg-debug] {
+  outline: 2px solid var(--aslg-danger) !important;
+  outline-offset: -2px !important;
+}
+
+.aslg-home-hero {
+  color: var(--aslg-text);
+}
+
 @media (max-width: 980px) {
   .main-nowPlayingBar-container {
     margin-inline: 8px !important;

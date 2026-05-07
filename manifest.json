@@ -22,5 +22,24 @@
       "ios",
       "modern"
     ]
+  },
+  {
+    "name": "Apple Spotify Liquid Glass Companion",
+    "description": "Settings, dynamic album accent, custom home hero, preset switching, and debug tools for Apple Spotify Liquid Glass.",
+    "preview": "assets/preview.png",
+    "main": "extensions/appleSpotifyLiquidGlassCompanion.js",
+    "readme": "README.md",
+    "authors": [
+      {
+        "name": "ahmad"
+      }
+    ],
+    "tags": [
+      "theme-companion",
+      "settings",
+      "dynamic-color",
+      "home",
+      "debug"
+    ]
   }
 ]
