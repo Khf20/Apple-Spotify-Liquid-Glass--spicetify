@@ -6,6 +6,9 @@
     "readme": "README.md",
     "usercss": "user.css",
     "schemes": "color.ini",
+    "include": [
+      "https://cdn.jsdelivr.net/gh/Khf20/Apple-Spotify-Liquid-Glass--spicetify@main/theme.js"
+    ],
     "authors": [
       {
         "name": "ahmad"
@@ -21,4 +24,3 @@
     ]
   }
 ]
-
