@@ -4,11 +4,7 @@ A dark liquid-glass Spicetify theme inspired by modern Apple/iOS glass surfaces.
 
 ## Preview
 
-Add screenshots to `assets/` and update the image below after pushing to GitHub.
-
-```md
 ![Apple Spotify Liquid Glass](assets/preview.png)
-```
 
 ## Features
 
@@ -76,9 +72,8 @@ The script copies the current files into your Spicetify theme folder and applies
 
 ## Marketplace Manifest
 
-This repo includes `manifest.json` for Spicetify Marketplace compatibility. Before publishing to Marketplace, add a real preview image at `assets/preview.png` and add the GitHub topic `spicetify-themes` to the repository.
+This repo includes `manifest.json` for Spicetify Marketplace compatibility. Before publishing to Marketplace, add the GitHub topic `spicetify-themes` to the repository.
 
 ## License
 
 MIT
-

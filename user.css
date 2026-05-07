@@ -68,6 +68,34 @@ body {
   background: transparent !important;
 }
 
+/* Replace Spotify's hard black rails/surfaces with the same liquid glass base. */
+#Desktop_LeftSidebar_Id,
+#Desktop_RightSidebar_Id,
+#Desktop_PanelContainer_Id,
+.Root__top-container > aside,
+.Root__top-container > nav,
+.Root__top-container > div,
+.LayoutResizer__resize-bar,
+.Root__main-view-overlay,
+.main-view-container__scroll-node-child,
+.main-home-content,
+[data-testid="home-page"],
+[data-testid="main-view-container"] {
+  background-color: transparent !important;
+}
+
+#Desktop_LeftSidebar_Id,
+#Desktop_RightSidebar_Id,
+.Root__nav-bar,
+.Root__right-sidebar {
+  background:
+    linear-gradient(180deg, rgba(19, 44, 64, 0.58), rgba(4, 12, 20, 0.72)) !important;
+}
+
+.LayoutResizer__resize-bar {
+  opacity: 0.28;
+}
+
 /* Top navigation */
 .Root__globalNav,
 .main-topBar-container,
@@ -178,6 +206,16 @@ body {
   background-image: none !important;
 }
 
+.main-home-homeHeader,
+.view-homeShortcutsGrid-shortcut,
+.main-gridContainer-gridContainer,
+.main-heroCard-card,
+.main-heroCard-container,
+.main-heroCard-heroCard,
+section[aria-label] > div {
+  background-color: transparent !important;
+}
+
 .main-home-filterChipsSection {
   background:
     linear-gradient(180deg, rgba(10, 24, 38, 0.86), rgba(10, 24, 38, 0.58)) !important;
@@ -203,6 +241,22 @@ body {
   box-shadow: var(--apple-inner-light), 0 14px 42px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(24px) saturate(145%);
   -webkit-backdrop-filter: blur(24px) saturate(145%);
+}
+
+.view-homeShortcutsGrid-shortcut,
+[data-testid="component-shelf"] [role="group"] > div,
+[data-testid="card"] {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.095), rgba(255, 255, 255, 0.04)) !important;
+  border: 1px solid var(--apple-border-soft);
+  border-radius: var(--apple-radius) !important;
+  box-shadow: var(--apple-inner-light), 0 12px 34px rgba(0, 0, 0, 0.22);
+}
+
+.view-homeShortcutsGrid-shortcut:hover,
+[data-testid="card"]:hover {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.065)) !important;
 }
 
 .main-trackList-trackList,
