@@ -46,6 +46,7 @@
   const blurClasses = ["aslg-blur-low", "aslg-blur-normal", "aslg-blur-high"];
 
   let queued = false;
+  let lastSync = 0;
 
   function readSettings() {
     try {
@@ -103,12 +104,6 @@
       });
     }
 
-    document.querySelectorAll("[style]").forEach((node) => {
-      const style = node.getAttribute("style") || "";
-      if (/background(?:-color)?:\s*(?:rgb\(0,\s*0,\s*0\)|#000|black)/i.test(style)) {
-        node.setAttribute("data-aslg-hard-black", "");
-      }
-    });
   }
 
   function sync() {
@@ -120,8 +115,11 @@
 
   function requestSync() {
     if (queued) return;
+    const now = Date.now();
+    if (now - lastSync < 750) return;
+    lastSync = now;
     queued = true;
-    requestAnimationFrame(sync);
+    window.setTimeout(() => requestAnimationFrame(sync), 120);
   }
 
   function observe() {
@@ -129,14 +127,12 @@
     const observer = new MutationObserver(requestSync);
     observer.observe(target, {
       childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ["class", "style", "data-testid", "aria-label"]
+      subtree: true
     });
 
     window.addEventListener("popstate", requestSync);
     window.addEventListener("hashchange", requestSync);
-    setInterval(requestSync, 2500);
+    setInterval(requestSync, 8000);
   }
 
   window.AppleSpotifyLiquidGlass = {

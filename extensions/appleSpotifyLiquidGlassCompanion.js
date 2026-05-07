@@ -10,15 +10,19 @@
     mode: "glass",
     blur: "normal",
     compact: false,
-    dynamicAccent: true,
-    homeHero: true,
+    dynamicAccent: false,
+    homeHero: false,
     debug: false,
+    performanceMode: true,
     accent: "#b9e7ff"
   };
 
   let menuItem = null;
   let observer = null;
   let lastAccentSource = "";
+  let lastTrackUri = "";
+  let lastHeroKey = "";
+  let syncTimer = 0;
   let queued = false;
 
   function waitForSpicetify() {
@@ -35,6 +39,23 @@
       return Object.assign({}, defaults, JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}"));
     } catch {
       return Object.assign({}, defaults);
+    }
+  }
+
+  function migratePerformanceSettings() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || "{}");
+      if (saved.performanceTunedV1) return;
+
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(Object.assign({}, saved, {
+        dynamicAccent: false,
+        homeHero: false,
+        debug: false,
+        performanceMode: true,
+        performanceTunedV1: true
+      })));
+    } catch {
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(Object.assign({}, defaults, { performanceTunedV1: true })));
     }
   }
 
@@ -72,6 +93,7 @@
 
     root.classList.toggle("aslg-debug", Boolean(settings.debug));
     root.classList.toggle("aslg-home-hero-enabled", Boolean(settings.homeHero));
+    root.classList.toggle("aslg-performance-mode", Boolean(settings.performanceMode));
     applyAccent(settings.accent);
     syncHomeHero();
     syncDebug();
@@ -135,7 +157,9 @@
 
         if (!total) return;
         const accent = rgbToHex(Math.round(r / total), Math.round(g / total), Math.round(b / total));
-        saveSettings({ accent });
+        applyAccent(accent);
+        const next = Object.assign({}, readSettings(), { accent });
+        localStorage.setItem(SETTINGS_KEY, JSON.stringify(next));
       } catch {
         applyAccent(settings.accent);
       }
@@ -237,6 +261,7 @@
       createControl("Compact mode", createToggle(settings.compact, (compact) => saveSettings({ compact }))),
       createControl("Dynamic album accent", createToggle(settings.dynamicAccent, (dynamicAccent) => saveSettings({ dynamicAccent }))),
       createControl("Custom Home Hero", createToggle(settings.homeHero, (homeHero) => saveSettings({ homeHero }))),
+      createControl("Performance mode", createToggle(settings.performanceMode, (performanceMode) => saveSettings({ performanceMode }))),
       createControl("Debug black surfaces", createToggle(settings.debug, (debug) => saveSettings({ debug }))),
       createControl("Accent color", color),
       actions,
@@ -314,6 +339,9 @@
     const hero = document.querySelector(".aslg-home-hero");
     if (!hero) return;
     const track = getCurrentTrack();
+    const key = `${track.uri}|${track.title}|${track.image}`;
+    if (key === lastHeroKey) return;
+    lastHeroKey = key;
     const img = hero.querySelector("img");
     const title = hero.querySelector("h1");
     const meta = hero.querySelector(".aslg-home-hero-meta");
@@ -324,6 +352,8 @@
   }
 
   function tagHardBlackSurfaces() {
+    if (!readSettings().debug) return;
+
     document.querySelectorAll("[style]").forEach((node) => {
       const style = node.getAttribute("style") || "";
       if (/background(?:-color)?:\s*(?:rgb\(0,\s*0,\s*0\)|#000|black)/i.test(style)) {
@@ -366,6 +396,19 @@
   }
 
   function updateDynamicAccent() {
+    const settings = readSettings();
+    if (!settings.dynamicAccent) {
+      updateHomeHero();
+      return;
+    }
+
+    const track = getCurrentTrack();
+    if (track.uri && track.uri === lastTrackUri) {
+      updateHomeHero();
+      return;
+    }
+    lastTrackUri = track.uri;
+
     const image = getCurrentImageUrl();
     extractAccent(image);
     updateHomeHero();
@@ -374,11 +417,17 @@
   function scheduleSync() {
     if (queued) return;
     queued = true;
-    requestAnimationFrame(() => {
+    window.clearTimeout(syncTimer);
+    syncTimer = window.setTimeout(() => requestAnimationFrame(() => {
       queued = false;
-      applySettings();
-      updateDynamicAccent();
-    });
+      const settings = readSettings();
+      root.classList.toggle("aslg-debug", Boolean(settings.debug));
+      root.classList.toggle("aslg-home-hero-enabled", Boolean(settings.homeHero));
+      root.classList.toggle("aslg-performance-mode", Boolean(settings.performanceMode));
+      if (!settings.performanceMode || settings.homeHero) syncHomeHero();
+      if (!settings.performanceMode || settings.dynamicAccent) updateDynamicAccent();
+      if (settings.debug) syncDebug();
+    }), 900);
   }
 
   function observeDom() {
@@ -386,13 +435,12 @@
     observer = new MutationObserver(scheduleSync);
     observer.observe(document.body, {
       childList: true,
-      subtree: true,
-      attributes: true,
-      attributeFilter: ["class", "style", "data-testid"]
+      subtree: true
     });
   }
 
   function init() {
+    migratePerformanceSettings();
     injectCss();
     applySettings();
     registerMenu();
